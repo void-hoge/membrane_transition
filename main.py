@@ -34,6 +34,7 @@ class app:
 	frame = tk.Frame(canvas)
 	img = {}
 	bottomrow = 0
+	buttons = {}
 	tree = graph(treefile_path)
 
 	def __init__(self):
@@ -59,19 +60,25 @@ class app:
 			self.img[self.tree.nodes[i]] = ImageTk.PhotoImage(fig)
 
 	def set_path(self):
+		print('path: ', self.tree.path)
 		for name in self.tree.path:
 			tk.Label(self.frame, image=self.img[name]).grid(column=0,row=self.bottomrow)
 			self.bottomrow+=1
 
 	def set_candidates(self):
+		def make_eventfunc(appended_node):
+			def temp():
+				print(appended_node, 'appended')
+				self.tree.path.append(appended_node)
+				self.canvas_reset()
+			return temp
+
+		print('candidates: ', self.tree.next(self.tree.path[-1]))
 		for i in self.tree.next(self.tree.path[-1]):
 			tk.Label(self.frame, image=self.img[i]).grid(column=0,row=self.bottomrow)
-			tk.Button(self.frame, text='apply', command=lambda: self.button_pressed(i)).grid(column=1,row=self.bottomrow)
+			self.buttons[i] = tk.Button(self.frame, text='apply', command=make_eventfunc(i))
+			self.buttons[i].grid(column=1,row=self.bottomrow)
 			self.bottomrow+=1
-
-	def button_pressed(self, appended_node):
-		self.tree.path.append(appended_node)
-		self.canvas_reset()
 
 	def canvas_reset(self):
 		self.frame.destroy()
