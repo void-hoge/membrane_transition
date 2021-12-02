@@ -1,93 +1,97 @@
 #!/usr/bin/env python3
-import tkinter as tk
-from PIL import Image, ImageTk, ImageOps
+import graph
+import pygame
+import sys
+import math
 
-dbdir_path = "DBfigures/"
-treefile_path = dbdir_path+"tree.txt"
+DBpath = 'DBfigures/'
+DBallpics = DBpath+'allpics.txt'
+DBfile = DBpath+'graph.txt'
+root = 'fig1.png'
 
-class graph:
-	data = []
-	nodes = []
-	path = []
-	def __init__(self, path):
-		all = open(path).read().split('\n')
-		for line in all[:-1]:
-			self.data.append(line.split())
-		self.nodes = [edges[0] for edges in self.data]
-		self.path.append(self.nodes[0])
-
-	def next(self, current):
-		if current not in self.nodes:
-			return None
-		idx = self.nodes.index(current)
-		return self.data[idx][1:]
-
-	def dump(self):
-		print("data")
-		for tmp in self.data:
-			print(tmp)
+def distance(x1, y1, x2, y2):
+	return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 
 class app:
-	root = tk.Tk()
-	canvas = tk.Canvas(root)
-	bar = tk.Scrollbar(canvas, orient=tk.VERTICAL)
-	frame = tk.Frame(canvas)
-	img = {}
-	bottomrow = 0
-	buttons = {}
-	tree = graph(treefile_path)
-
+	screen_size = (1280,720)
+	image_size = 200
+	background = 0,0,0
+	images = {}
+	imagepos = {}
+	zero = (0, 0)
 	def __init__(self):
-		self.root.geometry("1280x720")
-		self.set_images()
-		self.auto_configure()
+		self.tree = graph.graph(DBfile, root)
+		pygame.init()
+		self.screen = pygame.display.set_mode(self.screen_size)
+		pygame.display.set_caption('membrane transition')
+		self.loadimages()
+		pygame.display.flip()
+		pygame.key.set_repeat(50)
 
-	def auto_configure(self):
-		self.frame = tk.Frame(self.canvas)
-		self.canvas.pack(fill=tk.BOTH, expand=tk.YES)
-		self.canvas.create_window((0,0), window=self.frame, anchor=tk.NW, width=500)
-		self.bar.pack(side=tk.RIGHT, fill=tk.Y)
-		self.bar.config(command=self.canvas.yview)
-		self.set_path()
-		self.set_candidates()
-		self.canvas.config(scrollregion=(0,0,0,105*self.bottomrow))
-		self.canvas.config(yscrollcommand=self.bar.set)
+	def loadimages(self):
+		all = open(DBallpics).read().split('\n')
+		for line in all[:-1]:
+			self.images[line] = pygame.image.load(DBpath+line)
+			self.images[line] = pygame.transform.scale(self.images[line],(self.image_size,self.image_size))
+			self.imagepos[line] = self.images[line].get_rect()
+			# self.screen.blit(self.images[line], self.imagepos[line])
 
-	def set_images(self):
-		for i in range(len(self.tree.nodes)):
-			fig = Image.open(dbdir_path+self.tree.nodes[i])
-			fig = fig.resize(size=(100,100))
-			self.img[self.tree.nodes[i]] = ImageTk.PhotoImage(fig)
+	def setpath(self):
+		for i in range(len(self.tree.path)):
+			self.imagepos[self.tree.path[i]].x = self.zero[0]
+			self.imagepos[self.tree.path[i]].y = self.imagepos[self.tree.path[i]].height*i+self.zero[1]
+			self.screen.blit(self.images[self.tree.path[i]], self.imagepos[self.tree.path[i]])
 
-	def set_path(self):
-		print('path: ', self.tree.path)
-		for name in self.tree.path:
-			tk.Label(self.frame, image=self.img[name]).grid(column=0,row=self.bottomrow)
-			self.bottomrow+=1
+	def is_selected(self, mousepos, image):
+		imagepos = self.imagepos[image]
+		if imagepos.x < mousepos[0] and imagepos.x+imagepos.width > mousepos[0]:
+			if imagepos.y < mousepos[1] and imagepos.y+imagepos.height > mousepos[1]:
+				return True
+		return False
 
-	def set_candidates(self):
-		def make_eventfunc(appended_node):
-			def temp():
-				print(appended_node, 'appended')
-				self.tree.path.append(appended_node)
-				self.canvas_reset()
-			return temp
+	def replace_selected(self, mousepos, image, ispressed):
+		# 選択されているimage上の、最もmouseposに近い点が属すdstを表示する
+		imagepos = self.imagepos[image]
+		if self.is_selected(mousepos, image):
+			candidates = self.tree.get_next()
+			if candidates == None:
+				return
+			dist = []
+			for a in candidates:
+				dist.append(distance(mousepos[0]-imagepos[0], mousepos[1]-imagepos[1], a.x*self.image_size, a.y*self.image_size))
+			min = self.image_size*self.image_size
+			min_idx = 0
+			for i in range(len(dist)):
+				if dist[i] < min:
+					min = dist[i]
+					min_idx = i
+			self.imagepos[candidates[min_idx].highlighted] = self.imagepos[image]
+			self.screen.blit(self.images[candidates[min_idx].highlighted], self.imagepos[candidates[min_idx].highlighted])
+			if ispressed:
+				self.tree.path.append(candidates[min_idx].dst)
+		else:
+			self.screen.blit(self.images[image], self.imagepos[image])
 
-		print('candidates: ', self.tree.next(self.tree.path[-1]))
-		for i in self.tree.next(self.tree.path[-1]):
-			tk.Label(self.frame, image=self.img[i]).grid(column=0,row=self.bottomrow)
-			self.buttons[i] = tk.Button(self.frame, text='apply', command=make_eventfunc(i))
-			self.buttons[i].grid(column=1,row=self.bottomrow)
-			self.bottomrow+=1
-
-	def canvas_reset(self):
-		self.frame.destroy()
-		self.bottomrow = 0
-		self.auto_configure()
+	def draw(self):
+		self.screen.fill(self.background)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT: sys.exit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == 106: # j, scroll down
+					self.zero = (self.zero[0], self.zero[1]-10)
+				elif event.key == 107: # k, scroll up
+					self.zero = (self.zero[0], self.zero[1]+10)
+				elif event.key == 113: # q, quit
+					sys.exit()
+		self.setpath()
+		mousepos = pygame.mouse.get_pos()
+		ispressed = pygame.mouse.get_pressed()
+		self.replace_selected(mousepos, self.tree.path[-1], ispressed[0])
+		pygame.display.flip()
 
 def main():
 	hoge = app()
-	hoge.root.mainloop()
+	while True: hoge.draw()
 
 if __name__ == '__main__':
 	main()

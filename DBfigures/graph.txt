@@ -1,0 +1,12 @@
+fig1.png	fig2.png	fig1_fig2.png		0.5 0.2
+fig2.png	fig3.png	fig2_fig3.png 		0.5 0.8
+fig2.png	fig4.png	fig2_fig4.png		0.5 0.4
+fig2.png	fig6.png	fig2_fig6.png		0.5 0.25
+fig3.png	fig5.png	fig3_fig5.png		0.5 0.5
+fig4.png	fig10.png	fig4_fig10.png		0.5 0.8
+fig5.png	fig8.png	fig5_fig8.png		0.5 0.5
+fig6.png	fig7.png	fig6_fig7.png		0.5 0.3
+fig7.png	fig11.png	fig7_fig11.png		0.5 0.3
+fig8.png	fig9.png	fig8_fig9.png		0.5 0.5
+fig10.png	fig10_2.png	fig10_fig10_2.png	0.5 0.75
+fig11.png	fig12.png	fig11_fig12.png		0.5 0.25
