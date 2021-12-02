@@ -50,7 +50,7 @@ class app:
 		return False
 
 	def replace_selected(self, mousepos, image, ispressed):
-		# 選択されているimage上の、最もmouseposに近い点が属すdstを表示する
+		# show the highlighted closest to the mousepos on selected the image
 		imagepos = self.imagepos[image]
 		if self.is_selected(mousepos, image):
 			candidates = self.tree.get_next()
