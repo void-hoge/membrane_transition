@@ -83,6 +83,11 @@ class app:
 					self.zero = (self.zero[0], self.zero[1]+10)
 				elif event.key == 113: # q, quit
 					sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if event.button == 4:
+					self.zero = (self.zero[0], self.zero[1]+20)
+				if event.button == 5:
+					self.zero = (self.zero[0], self.zero[1]-20)
 		self.setpath()
 		mousepos = pygame.mouse.get_pos()
 		ispressed = pygame.mouse.get_pressed()
