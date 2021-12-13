@@ -3,6 +3,14 @@ import graph
 import pygame
 import sys
 import math
+import matplotlib
+import matplotlib.pyplot as plt
+from PIL import Image
+import os
+
+matplotlib.use("Agg")
+matplotlib.rcParams.update({'text.usetex': True})
+matplotlib.rc('text.latex', preamble=r"\usepackage{xcolor}")
 
 DBpath = 'DBfigures/'
 DBallpics = DBpath+'allpics.txt'
@@ -12,12 +20,28 @@ root = 'fig1.png'
 def distance(x1, y1, x2, y2):
 	return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 
-class app:
+def tex2surface(str):
+	plt.grid(False)
+	fig, ax = plt.subplots(figsize=(15,1.1), dpi=50)
+	ax.axis("off")
+	plt.text(x=-0.1,y=0.1,s=str, horizontalalignment='left', fontsize=50)
+	plt.savefig("tmp.eps")
+	plt.close()
+	tmp = Image.open("tmp.eps")
+	tmp.save("tmp.png")
+	surface = pygame.image.load("tmp.png")
+	os.system("rm tmp.png")
+	os.system("rm tmp.eps")
+	return surface
+
+class transition:
 	screen_size = (1280,720)
 	image_size = 200
-	background = 0,0,0
+	background = (255,255,255)
 	images = {}
 	imagepos = {}
+	formula = {}
+	formulapos = {}
 	zero = (0, 0)
 	def __init__(self):
 		self.tree = graph.graph(DBfile, root)
@@ -31,16 +55,26 @@ class app:
 	def loadimages(self):
 		all = open(DBallpics).read().split('\n')
 		for line in all[:-1]:
-			self.images[line] = pygame.image.load(DBpath+line)
-			self.images[line] = pygame.transform.scale(self.images[line],(self.image_size,self.image_size))
-			self.imagepos[line] = self.images[line].get_rect()
-			# self.screen.blit(self.images[line], self.imagepos[line])
+			tmp = line.split();
+			fig = tmp[0];
+			fml = tmp[1];
+			print("Loading {}, {}".format(fig, fml))
+			self.images[fig] = pygame.image.load(DBpath+fig)
+			self.images[fig] = pygame.transform.scale(self.images[fig],(self.image_size,self.image_size))
+			self.imagepos[fig] = self.images[fig].get_rect()
+			self.formula[fig] = tex2surface(fml);
+			self.formulapos[fig] = self.formula[fig].get_rect()
+		print("The images and the formulaes was successfully loaded.")
 
 	def setpath(self):
 		for i in range(len(self.tree.path)):
-			self.imagepos[self.tree.path[i]].x = self.zero[0]
-			self.imagepos[self.tree.path[i]].y = self.imagepos[self.tree.path[i]].height*i+self.zero[1]
-			self.screen.blit(self.images[self.tree.path[i]], self.imagepos[self.tree.path[i]])
+			tmp = self.tree.path[i]
+			self.imagepos[tmp].x = self.zero[0]
+			self.imagepos[tmp].y = self.imagepos[tmp].height*i+self.zero[1]
+			self.screen.blit(self.images[tmp], self.imagepos[tmp])
+			self.formulapos[tmp].x = self.zero[0]+self.imagepos[tmp].width
+			self.formulapos[tmp].y = self.imagepos[tmp].height*i+self.zero[1]
+			self.screen.blit(self.formula[tmp], self.formulapos[tmp])
 
 	def is_selected(self, mousepos, image):
 		imagepos = self.imagepos[image]
@@ -67,10 +101,12 @@ class app:
 					min_idx = i
 			self.imagepos[candidates[min_idx].highlighted] = self.imagepos[image]
 			self.screen.blit(self.images[candidates[min_idx].highlighted], self.imagepos[candidates[min_idx].highlighted])
+			self.screen.blit(self.formula[candidates[min_idx].highlighted], self.formulapos[self.tree.path[-1]])
 			if ispressed:
 				self.tree.path.append(candidates[min_idx].dst)
 		else:
 			self.screen.blit(self.images[image], self.imagepos[image])
+			self.screen.blit(self.formula[image],self.formulapos[image])
 
 	def draw(self):
 		self.screen.fill(self.background)
@@ -95,7 +131,7 @@ class app:
 		pygame.display.flip()
 
 def main():
-	hoge = app()
+	hoge = transition()
 	while True: hoge.draw()
 
 if __name__ == '__main__':

@@ -15,10 +15,10 @@ class edge:
 		return 'edge<dst: {}, highlighted: {}, (x, y):({}, {})>'.format(self.dst, self.highlighted, self.x, self.y)
 
 class graph:
-	edge = {} # {src: [(dst, highlighted, x, y), (dst, highlighted, x, y)...], ...}
-	node = set()
-	path = []
 	def __init__(self, filepath, root):
+		self.edge = {} # {src: [(dst, highlighted, x, y), (dst, highlighted, x, y)...], ...}
+		self.node = set()
+		self.path = list()
 		all = open(filepath).read().split('\n')
 		for line in all[:-1]:
 			tmp = line.split()
