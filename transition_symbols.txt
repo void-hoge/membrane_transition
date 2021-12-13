@@ -1,0 +1,91 @@
+$S_0: \Mpos\mpos\Mpos\mpos\Mpos\textcolor{red}{\mpos}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($C\mpos$)
+
+$S_1: \Mpos\mpos\Mpos\mpos\Mpos\mneg\Mpos\mpos$
+
+$S_1: \Mpos\textcolor{red}{\mpos}\Mpos\mpos\Mpos\textcolor{red}{\mneg}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($TU$)
+
+$S_2: \Mpos\dot{\mpos}\Mpos\mpos\Mpos\dot{\mneg}\Mpos\mpos$
+
+$S_2: \Mpos\textcolor{red}{\dot{\mpos}}\Mpos\mpos\Mpos\textcolor{red}{\dot{\mneg}}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($R(\mpos,\mneg)$)
+
+$S_3: \dot{\Mpos}\mpos\Mpos\mpos\Mpos\mpos \para \dot{\Mpos}\mpos\Mpos\mpos\Mpos\mpos$
+
+$S_3: \textcolor{red}{\dot{\Mpos}}\mpos\Mpos\mpos\Mpos\mpos \para \textcolor{red}{\dot{\Mpos}}\mpos\Mpos\mpos\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($SE$)
+
+ $S_4: \Mpos\mpos\Mpos\mpos\Mpos\mpos \para \Mpos\mpos\Mpos\mpos\Mpos\mpos$
+
+FIGURE
+
+系列２（眼の形成）
+
+
+$S_{0}: \Mpos\mpos\Mpos\mpos\Mpos\textcolor{red}{\mpos}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($C\mpos$)
+
+$S'_0: \Mpos\mpos\Mpos\mpos\Mpos\mneg\Mpos\mpos$
+
+$S'_0: \Mpos\mpos\Mpos\mpos\Mpos\textcolor{red}{\mneg}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($B\mneg$)
+
+$S_1: \Mpos\mpos\Mpos\mpos\Mpos\mneg\Mneg\mneg\Mpos\mpos$
+
+$S_1: \Mpos\mpos\Mpos\mpos\textcolor{red}{\Mpos}\mneg\Mneg\mneg\textcolor{red}{\Mpos}\mpos$
+
+\quad $\Downarrow$ \quad ($TO$)
+
+$S_2: \Mpos\mpos\Mpos\mpos\dot{\Mpos}\mneg\Mneg\mneg\dot{\Mpos}\mpos$
+
+$S_2: \Mpos\mpos\Mpos\mpos\textcolor{red}{\dot{\Mpos}}\mneg\Mneg\mneg\textcolor{red}{\dot{\Mpos}}\mpos$
+
+\quad $\Downarrow$ \quad ($R(\Mpos,\Mpos)$)
+
+$S_3: \Mpos\mpos\Mpos\mpos\Mpos\dot{\mneg}\Mpos\mpos[\mneg\dot{\Mneg}\mneg\Mneg]$
+
+$S_3: \Mpos\mpos\Mpos\mpos\Mpos\textcolor{red}{\dot{\mneg}}\Mpos\mpos[\mneg\textcolor{red}{\dot{\Mneg}}\mneg\Mneg]$
+
+\quad $\Downarrow$ \quad ($SI$)
+
+ $S_4: \Mpos\mpos\Mpos\mpos\Mpos\mneg\Mpos\mpos[\mneg\Mneg\mneg\Mneg]$
+
+FIGURE
+
+
+系列３（ゴルジ小胞分離）
+
+$S_0: \Mpos\textcolor{red}{\mpos}\Mpos\mpos\Mpos\textcolor{red}{\mpos}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($C\mpos$)
+
+$S_1: \Mpos\mneg\Mpos\mpos\Mpos\mneg\Mpos\mpos$
+
+$S_1: \Mpos\textcolor{red}{\mneg}\Mpos\mpos\Mpos\textcolor{red}{\mneg}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($TH$)
+
+$S_2: \Mpos\dot{\mneg}\Mpos\mpos\Mpos\dot{\mneg}\Mpos\mpos$
+
+$S_2: \Mpos\textcolor{red}{\dot{\mneg}}\Mpos\mpos\Mpos\textcolor{red}{\dot{\mneg}}\Mpos\mpos$
+
+\quad $\Downarrow$ \quad ($R(\mneg,\mneg)$)
+
+$S_3: \Mpos\dot{\mpos}\Mpos\mpos \para \Mpos\mpos\Mpos\dot{\mpos}$
+
+$S_3: \Mpos\textcolor{red}{\dot{\mpos}}\Mpos\mpos \para \Mpos\mpos\Mpos\textcolor{red}{\dot{\mpos}}$
+
+\quad $\Downarrow$ \quad ($SE$)
+
+ $S_4: \Mpos\mpos\Mpos\mpos \para \Mpos\mpos\Mpos\mpos$
+
+FIGURE
+
+\end{document}
