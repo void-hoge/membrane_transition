@@ -22,7 +22,7 @@ def distance(x1, y1, x2, y2):
 
 def tex2surface(str):
 	plt.grid(False)
-	fig, ax = plt.subplots(figsize=(15,1.1), dpi=50)
+	fig, ax = plt.subplots(figsize=(20,1.1), dpi=50)
 	ax.axis("off")
 	plt.text(x=-0.1,y=0.1,s=str, horizontalalignment='left', fontsize=50)
 	plt.savefig("tmp.eps")
@@ -46,7 +46,7 @@ class transition:
 	def __init__(self):
 		self.tree = graph.graph(DBfile, root)
 		pygame.init()
-		self.screen = pygame.display.set_mode(self.screen_size)
+		self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
 		pygame.display.set_caption('membrane transition')
 		self.loadimages()
 		pygame.display.flip()
@@ -64,7 +64,7 @@ class transition:
 			self.imagepos[fig] = self.images[fig].get_rect()
 			self.formula[fig] = tex2surface(fml);
 			self.formulapos[fig] = self.formula[fig].get_rect()
-		print("The images and the formulaes was successfully loaded.")
+		print("All images and formulaes were successfully loaded.")
 
 	def setpath(self):
 		for i in range(len(self.tree.path)):
