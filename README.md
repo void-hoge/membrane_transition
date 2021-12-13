@@ -1,7 +1,7 @@
 # MEMBRANE TRANSITION
 
 ## 実行
-- Python3, pygameを使用。
+- Python3, pygame, Pillow, matplotlibを使用。
   - pygameはゲームを作るためのクロスプラットフォームモジュール群
   - `$ pip3 install pygame`でインストール
 - `$ ./main.py`で実行
