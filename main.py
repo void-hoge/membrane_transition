@@ -50,7 +50,7 @@ class transition:
 		pygame.display.set_caption('membrane transition')
 		self.loadimages()
 		pygame.display.flip()
-		pygame.key.set_repeat(50)
+		# pygame.key.set_repeat(50)
 
 	def loadimages(self):
 		all = open(DBallpics).read().split('\n')
@@ -113,11 +113,15 @@ class transition:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT: sys.exit()
 			if event.type == pygame.KEYDOWN:
-				if event.key == 106: # j, scroll down
+				if event.key == ord('j'): # j, scroll down
 					self.zero = (self.zero[0], self.zero[1]-10)
-				elif event.key == 107: # k, scroll up
+				elif event.key == ord('k'): # k, scroll up
 					self.zero = (self.zero[0], self.zero[1]+10)
-				elif event.key == 113: # q, quit
+				elif event.key == ord('r'): # r, reset
+					self.tree.reset()
+				elif event.key == ord('u'): # u, undo
+					self.tree.pop_path()
+				elif event.key == ord('q'): # q, quit
 					sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.button == 4:
@@ -127,6 +131,7 @@ class transition:
 		self.setpath()
 		mousepos = pygame.mouse.get_pos()
 		ispressed = pygame.mouse.get_pressed()
+		# print(len(self.tree.path))
 		self.replace_selected(mousepos, self.tree.path[-1], ispressed[0])
 		pygame.display.flip()
 

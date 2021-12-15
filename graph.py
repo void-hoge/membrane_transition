@@ -17,6 +17,7 @@ class edge:
 class graph:
 	def __init__(self, filepath, root):
 		self.edge = {} # {src: [(dst, highlighted, x, y), (dst, highlighted, x, y)...], ...}
+		self.root = root
 		self.node = set()
 		self.path = list()
 		all = open(filepath).read().split('\n')
@@ -27,11 +28,20 @@ class graph:
 			self.edge[tmp[0]].append(edge(tmp[1], tmp[2], float(tmp[3]), float(tmp[4])))
 			self.node.add(tmp[0])
 			self.node.add(tmp[1])
-		self.path.append(root)
+		self.path.append(self.root)
+
 	def get_next(self):
 		if self.path[-1] not in self.edge:
 			return None
 		return self.edge[self.path[-1]]
+
+	def reset(self):
+		self.path = []
+		self.path.append(self.root)
+
+	def pop_path(self):
+		if len(self.path) != 1:
+			self.path.pop()
 
 def main():
 	tree = graph(DBfile, root)
