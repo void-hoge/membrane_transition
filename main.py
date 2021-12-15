@@ -117,6 +117,10 @@ class transition:
 					self.zero = (self.zero[0], self.zero[1]-10)
 				elif event.key == ord('k'): # k, scroll up
 					self.zero = (self.zero[0], self.zero[1]+10)
+				elif event.key == ord('h'): # h, scroll left
+					self.zero = (self.zero[0]-10, self.zero[1])
+				elif event.key == ord('l'): # l, scroll right
+					self.zero = (self.zero[0]+10, self.zero[1])
 				elif event.key == ord('r'): # r, reset
 					self.tree.reset()
 				elif event.key == ord('u'): # u, undo
