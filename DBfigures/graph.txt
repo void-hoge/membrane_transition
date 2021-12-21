@@ -1,12 +1,12 @@
-fig1.png	fig2.png	fig1_fig2.png		0.5 0.2
-fig2.png	fig3.png	fig2_fig3.png 		0.5 0.8
-fig2.png	fig4.png	fig2_fig4.png		0.5 0.4
-fig2.png	fig6.png	fig2_fig6.png		0.5 0.25
-fig3.png	fig5.png	fig3_fig5.png		0.5 0.5
-fig4.png	fig10.png	fig4_fig10.png		0.5 0.8
-fig5.png	fig8.png	fig5_fig8.png		0.5 0.5
-fig6.png	fig7.png	fig6_fig7.png		0.5 0.3
-fig7.png	fig11.png	fig7_fig11.png		0.5 0.3
-fig8.png	fig9.png	fig8_fig9.png		0.5 0.5
-fig10.png	fig10_2.png	fig10_fig10_2.png	0.5 0.75
-fig11.png	fig12.png	fig11_fig12.png		0.5 0.25
+fig1	fig2	fig1_fig2		0.5 0.2		$(Cm^{+})$
+fig2	fig3	fig2_fig3 		0.5 0.8		$(Cm^{+})$
+fig2	fig4	fig2_fig4		0.5 0.4		$(TU)$
+fig2	fig6	fig2_fig6		0.5 0.25	$(Bm^{-})$
+fig3	fig5	fig3_fig5		0.5 0.5		$(TH)$
+fig4	fig10	fig4_fig10		0.5 0.8		$(R(m^{+},m^{-}))$
+fig5	fig8	fig5_fig8		0.5 0.5		$(R(m^{-},m^{-}))$
+fig6	fig7	fig6_fig7		0.5 0.3		$(TO)$
+fig7	fig11	fig7_fig11		0.5 0.3		$(R(M^{+},M^{+}))$
+fig8	fig9	fig8_fig9		0.5 0.5		$(R(m^{-},m^{-}))$
+fig10	fig10_2	fig10_fig10_2		0.5 0.75	$(SE)$
+fig11	fig12	fig11_fig12		0.5 0.25	$(SI)$

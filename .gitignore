@@ -1,5 +1,5 @@
 *.pdf
 .DS_Store
 /__pycache__/
-note
+memo
 texput.log
