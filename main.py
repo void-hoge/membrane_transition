@@ -18,92 +18,122 @@ class transition:
 	def __init__(self):
 		self.screen_size = (1280,720)
 		self.image_size = 200
-		self.background = (255,255,255)
-		self.images = {}
-		self.imagepos = {}
+		self.formula_height = 80
+		self.background = (255,255,255) # white
+		self.image = {}
 		self.formula = {}
-		self.formulapos = {}
 		self.rule = {}
-		self.rulepos = {}
-		self.zero = (0, 0)
+		self.zero = (0, 0) # origin point (it moves when scrolling)
 		self.tree = graph.graph(DBfile)
 		pygame.init()
 		self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
 		pygame.display.set_caption('membrane transition')
-		self.loadimages()
-		pygame.display.flip()
+		self.loadimage()
 
-	def loadimages(self):
+	def loadimage(self):
+		""" Load all images DBdir using DBallpics.
+		If the file name starts with 'rule_', load the formula(rule) image into self.rule with the key as the formula.
+		If not, load the figure into self.image and load the formula image self.formula with the key as the filename.
+		"""
 		all = open(DBallpics).read().split('\n')
 		for line in all[:-1]:
 			tmp = line.split();
 			fig = tmp[0];
 			fml = tmp[1];
-			print("Loading {}, {}, {}".format(fig+'.png', fig+'_fml.png', fml))
+			print("Loading {}, {}, {}".format(fig+'.png', fig+'_fml.png', fml), file=sys.stderr)
 			if 'rule_' in fig:
 				# a rule
 				self.rule[fml] = pygame.image.load(DBdir+fig+'_fml.png')
-				self.rulepos[fml] = self.rule[fml].get_rect()
+				width = self.rule[fml].get_rect().width * (self.rule[fml].get_rect().height/self.formula_height)
+				self.rule[fml] = pygame.transform.scale(self.rule[fml], (width, self.formula_height))
 			else:
 				# not a rule
-				self.images[fig] = pygame.image.load(DBdir+fig+'.png')
-				self.images[fig] = pygame.transform.scale(self.images[fig],(self.image_size,self.image_size))
-				self.imagepos[fig] = self.images[fig].get_rect()
+				self.image[fig] = pygame.image.load(DBdir+fig+'.png')
+				self.image[fig] = pygame.transform.scale(self.image[fig],(self.image_size,self.image_size))
 				self.formula[fig] = pygame.image.load(DBdir+fig+'_fml.png')
-				self.formulapos[fig] = self.formula[fig].get_rect()
-		print("All images and formulas were successfully loaded.")
+				width = self.formula[fig].get_rect().width * (self.formula[fig].get_rect().height/self.formula_height)
+				self.formula[fig] = pygame.transform.scale(self.formula[fig], (width, self.formula_height))
+		print("All image and formulas were successfully loaded.", file=sys.stderr)
+
+	def put_image(self, name, pos):
+		""" Display the image in self.image named name in pos.
+		"""
+		self.screen.blit(self.image[name], pos)
+
+	def put_formula(self, name, pos):
+		""" Display the formula in self.formula named name in pos.
+		"""
+		self.screen.blit(self.formula[name], pos)
+
+	def put_rule(self, name, pos):
+		""" Display the rule in self.rule named name in pos.
+		"""
+		self.screen.blit(self.rule[name], pos)
 
 	def setpath(self):
-		for i in range(len(self.tree.path)):
-			tmp = self.tree.path[i]
-			self.imagepos[tmp].x = self.zero[0]
-			self.imagepos[tmp].y = self.imagepos[tmp].height*i+self.zero[1]
-			self.screen.blit(self.images[tmp], self.imagepos[tmp])
-			self.formulapos[tmp].x = self.zero[0]+self.imagepos[tmp].width
-			self.formulapos[tmp].y = self.imagepos[tmp].height*i+self.zero[1]
-			self.screen.blit(self.formula[tmp], self.formulapos[tmp])
-			if i >= 1:
-				rule = self.tree.rule_path[i-1]
-				self.rulepos[rule].x = self.zero[0]+self.imagepos[tmp].width
-				self.rulepos[rule].y = self.zero[1]+self.imagepos[tmp].height*(i-1)+self.formulapos[tmp].height
-				self.screen.blit(self.rule[rule], self.rulepos[rule])
+		""" Read path from self.tree and display it.
+		Display highlited except for the newest (below) state.
+		"""
+		for i in range(len(self.tree.edge_path)):
+			edg = self.tree.edge_path[i]
+			# put highlighted images
+			pos = (self.zero[0], self.zero[1] + self.image_size*i)
+			self.put_image(edg.highlighted, pos)
+			# put formulas
+			pos = (self.zero[0]+self.image_size, self.zero[1] + self.image_size*i)
+			self.put_formula(edg.highlighted, pos)
+			# put rules
+			pos = (self.zero[0]+self.image_size, self.zero[1] + self.image_size*i + self.formula_height)
+			self.put_rule(edg.rule, pos)
+		# plaec current image
+		idx = len(self.tree.edge_path)
+		back = self.tree.path[-1]
+		pos = (self.zero[0], self.zero[1]+self.image_size*len(self.tree.edge_path))
+		self.put_image(back, pos)
 
-	def is_selected(self, mousepos, image):
-		imagepos = self.imagepos[image]
-		if imagepos.x < mousepos[0] and imagepos.x+imagepos.width > mousepos[0]:
-			if imagepos.y < mousepos[1] and imagepos.y+imagepos.height > mousepos[1]:
+	def is_selected(self, mousepos, pos):
+		"""Determine if there is a mouse in the image with pos in the upper left
+		"""
+		if pos[0] < mousepos[0] and pos[0]+self.image_size > mousepos[0]:
+			if pos[1] < mousepos[1] and pos[1]+self.image_size > mousepos[1]:
 				return True
 		return False
 
 	def replace_selected(self, mousepos, image, ispressed):
-		# show the highlighted which closest to the mousepos on selected the image
-		imagepos = self.imagepos[image]
-		if self.is_selected(mousepos, image):
+		""" When the mouse selects the image, replace it with the next transition image.
+		"""
+		replace_pos = (self.zero[0], self.zero[1]+self.image_size*len(self.tree.edge_path))
+		if self.is_selected(mousepos, replace_pos):
 			candidates = self.tree.get_next()
-			if candidates == None:
+			if candidates == None: # if there is no edge from current state
+				tmp_pos = (self.zero[0]+self.image_size, self.zero[1] + self.image_size*len(self.tree.edge_path))
+				self.put_image(image, replace_pos)
+				self.put_formula(image, tmp_pos)
 				return
 			dist = []
 			for a in candidates:
-				dist.append(distance(mousepos[0]-imagepos[0], mousepos[1]-imagepos[1], a.x*self.image_size, a.y*self.image_size))
-			min = self.image_size*self.image_size
+				dist.append(distance(mousepos[0]-replace_pos[0], mousepos[1]-replace_pos[1], a.x*self.image_size, a.y*self.image_size))
+			min = 10000
 			min_idx = 0
 			for i in range(len(dist)):
 				if dist[i] < min:
 					min = dist[i]
 					min_idx = i
-			self.imagepos[candidates[min_idx].highlighted] = self.imagepos[image]
-			self.screen.blit(self.images[candidates[min_idx].highlighted], self.imagepos[candidates[min_idx].highlighted])
-			self.screen.blit(self.formula[candidates[min_idx].highlighted], self.formulapos[self.tree.path[-1]])
-			self.rulepos[candidates[min_idx].rule].x = self.formulapos[self.tree.path[-1]].x
-			self.rulepos[candidates[min_idx].rule].y = self.formulapos[self.tree.path[-1]].y + self.formulapos[self.tree.path[-1]].height
-			self.screen.blit(self.rule[candidates[min_idx].rule], self.rulepos[candidates[min_idx].rule])
+			self.put_image(candidates[min_idx].highlighted, replace_pos)
+			tmp_pos = (self.zero[0] + self.image_size, self.zero[1]+self.image_size*len(self.tree.edge_path))
+			self.put_formula(candidates[min_idx].highlighted, tmp_pos)
+			tmp_pos = (self.zero[0] + self.image_size, self.zero[1] + self.image_size*len(self.tree.edge_path) + self.formula_height)
+			self.put_rule(candidates[min_idx].rule, tmp_pos)
 			if ispressed:
 				self.tree.push_path(candidates[min_idx])
 		else:
-			self.screen.blit(self.images[image], self.imagepos[image])
-			self.screen.blit(self.formula[image],self.formulapos[image])
+			tmp_pos = (self.zero[0] + self.image_size, self.zero[1] + self.image_size*len(self.tree.edge_path))
+			self.put_image(image, replace_pos)
+			self.put_formula(image, tmp_pos)
 
 	def draw(self):
+		""" main loop function
+		"""
 		self.screen.fill(self.background)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT: sys.exit()

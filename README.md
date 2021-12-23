@@ -1,37 +1,21 @@
 # MEMBRANE TRANSITION
 
+![screenshot](screenshot/ss1.png)
+
 ## 実行
 - Python3, pygame, Pillow, matplotlibを使用。
-  - pygameはゲームを作るためのクロスプラットフォームモジュール群
-  - `$ pip3 install pygame`でインストール
 - `$ ./main.py`で実行
   - レンダリング、グラフの構成、GUIでの表示を全て行える。
 
----
-## プログラム構成
-### render.py
-- DBfigures/allpics.txtに記載された数式をレンダリングする。
-- 前回実行時の数式などの状態をprev.txtに保存しておき、更新があった要素のみをレンダリングする。
-- prev.txtを削除すると、全ての式をレンダリングし直す。
-
-### graph.py
-- DBfigures/graph.txtに記載された辺の情報からgraphクラスのインスタンスを生成する。
-
-### main.py
-- 上記2つのプログラムを用いてGUIを操作する。
-
----
 ## 画像の用意
 
 使用する画像は、全て`DBfigures/`直下に置く必要がある。
 
 拡張子は`.png`のみをサポートしている。
 
----
 ## 式の制約
 `DBfigures/allpics.txt`と`DBfigures/graph.txt`に記入するlatexの式は全て、スペースやタブ文字を含むことができない。
 
----
 ## DBfigures/allpics.txt
 画像を一括で読み込むためのテーブル。行ごとの順序は問わない。
 
@@ -47,7 +31,6 @@
     - 例えば、`$(TU)$`というルールの式を生成するとき、`rule_TU $(TU)$`とする。(`rule_TU`のところは`rule_*`の形を満たせばなんでも良い。)
     - この時、`DBfigures/rule_TU_fml.png`が生成される。
 
----
 ## DBfigures/graph.txt
 遷移を行う有向辺を記述するテーブル。1行目は初期状態から始まる辺である必要があるが、その他の順序は自由
 
@@ -76,7 +59,6 @@
   - `fig1 fig2 fig1_fig2 0.5 0.2 $(Cm^{+})$`
   - この行をファイルの先頭に置くと、`fig1.png`が初期状態になる。
 
----
 ## 操作
 - 左上から画像が表示される。
 - 最も下にある画像にマウスオーバーすると、マウスの場所と最も近い変化点を持つ候補が表示される。
@@ -84,3 +66,63 @@
 - j, kまたはマウスホイールでスクロール、qで終了(lessと同じ操作)
 - h, lで左右に移動
 - uでundo、rでreset
+
+## プログラム構成
+### render.py
+- DBfigures/allpics.txtに記載された数式をレンダリングする。
+- 前回実行時の数式などの状態をprev.txtに保存しておき、更新があった要素のみをレンダリングする。
+- prev.txtを削除すると、全ての式をレンダリングし直す。
+
+### graph.py
+- graph.edge
+  - 辺の情報を保持するクラス
+  - dst: distination
+  - highlighted: ハイライトされた画像
+  - x, y: 選択するときの中心座標
+  - rule: ルールを表す式
+- graph.graph
+  - グラフの情報とたどった経路の情報を保持するクラス
+  - node: ノードのリスト、それぞれはファイルのbasename
+  - path: 遷移したノードのリスト、それぞれはファイルのbasename
+  - edge_path: 遷移したエッジのリスト、それぞれはedgeのインスタンス
+- graph.graph.get_next()
+  - 現在の状態から出ているエッジをリストで返す
+- graph.graph.reset()
+  - pathとedge_pathをリセットする。
+  - pathには初期状態が入るようになり、edge_pathは空になる。
+- graph.graph.push_path(edg)
+  - パスにエッジを追加して、遷移させる。
+  - edgeのインスタンスを引数にとる。
+  - pathにedg.dstを追加
+  - edge_pathにedgを追加
+- graph.graph.pop_path()
+  - パスから一つポップし、遷移を巻き戻す
+  - edge_pathとpathを一回ポップする。
+  - len(path)が1より小さいときはポップしない。
+
+### main.py
+- main.transition
+  - 描画に必要な全ての情報を保持するクラス
+  - image: 状態を表す全ての画像と、変化する場所がハイライトされた画像を保持する辞書。キーはファイルのbasename、値はpygame.Surface
+  - formula: 状態を表す全ての式の画像と、変化する場所がハイライトされた式の画像を保持する辞書。キーはファイルのbasename、値はpygame.Surface
+  - rule: ルールを表す全ての式の画像を保持する辞書。キーは式のlatexコード、値はpygame.Surface
+  - tree: graph.graphのインスタンス
+- main.transform.loadimage()
+  - DBfigures/allpics.txtから全ての画像データを読み込む。
+  - 先頭が"rule_"の場合
+    - ルールとして、self.ruleに読み込む
+  - 先頭が"rule_"でない場合
+    - 画像として、self.imageに読み込む
+    - 式を、self.formulaに読み込む
+- main.transition.setpath()
+  - 遷移してきたパスを表示する。
+  - 現在の状態以外では、変化した場所がハイライトされた画像を読み込む
+- main.transition.replace_selected(mousepos, image, ispressed)
+  - マウスが現在の状態の画像を指しているとき、適当な画像に置き換える。
+  - graph.get_next()で候補となるエッジを得る。
+  - マウスと最も近い点を持つエッジの変化点ハイライトされた画像を表示する。
+  - 式とルールも適当なものに書き換える。
+  - マウスが押されているとき、self.treeに選択されているエッジをpushする。
+- main.transition.draw()
+  - メインループのための関数
+  - キーイベントなどを制御する。

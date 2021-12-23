@@ -20,7 +20,7 @@ class graph:
 		self.edge = {} # {src: [(dst, highlighted, x, y), (dst, highlighted, x, y)...], ...}
 		self.node = set()
 		self.path = list()
-		self.rule_path = list()
+		self.edge_path = list()
 		all = open(filepath).read().split('\n')
 		self.root = all[0].split()[0]
 		for line in all[:-1]:
@@ -40,17 +40,18 @@ class graph:
 	def reset(self):
 		self.path = []
 		self.path.append(self.root)
+		self.edge_path = []
 
 	def push_path(self, edg):
 		if not isinstance(edg, edge):
 			raise Exception("edg must be a instance of edge.")
 		self.path.append(edg.dst)
-		self.rule_path.append(edg.rule)
+		self.edge_path.append(edg)
 
 	def pop_path(self):
-		if len(self.path) != 1:
+		if len(self.path) > 1:
 			self.path.pop()
-			self.rule_path.pop()
+			self.edge_path.pop()
 
 def main():
 	tree = graph(DBfile)
