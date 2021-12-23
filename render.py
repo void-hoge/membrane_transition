@@ -25,9 +25,9 @@ def render(dbdir, file):
 		name = tmp[0]
 		formula = tmp[1]
 		plt.grid(False)
-		fig, ax = plt.subplots(figsize=(20,1.1), dpi=50)
+		fig, ax = plt.subplots(figsize=(60,3), dpi=50)
 		ax.axis("off")
-		plt.text(x=-0.1,y=0.1,s=formula, horizontalalignment='left', fontsize=50)
+		plt.text(x=-0.1,y=0.1,s=formula, horizontalalignment='left', fontsize=150)
 		plt.savefig("tmp.eps")
 		plt.close()
 		tmp = Image.open("tmp.eps")

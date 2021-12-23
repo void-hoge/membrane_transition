@@ -44,14 +44,14 @@ class transition:
 			if 'rule_' in fig:
 				# a rule
 				self.rule[fml] = pygame.image.load(DBdir+fig+'_fml.png')
-				width = self.rule[fml].get_rect().width * (self.rule[fml].get_rect().height/self.formula_height)
+				width = self.rule[fml].get_rect().width * (self.formula_height/self.rule[fml].get_rect().height)
 				self.rule[fml] = pygame.transform.scale(self.rule[fml], (width, self.formula_height))
 			else:
 				# not a rule
 				self.image[fig] = pygame.image.load(DBdir+fig+'.png')
 				self.image[fig] = pygame.transform.scale(self.image[fig],(self.image_size,self.image_size))
 				self.formula[fig] = pygame.image.load(DBdir+fig+'_fml.png')
-				width = self.formula[fig].get_rect().width * (self.formula[fig].get_rect().height/self.formula_height)
+				width = self.formula[fig].get_rect().width * (self.formula_height/self.formula[fig].get_rect().height)
 				self.formula[fig] = pygame.transform.scale(self.formula[fig], (width, self.formula_height))
 		print("All image and formulas were successfully loaded.", file=sys.stderr)
 
