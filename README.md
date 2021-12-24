@@ -14,7 +14,7 @@
 
 ## latex式の制約
 - `DBfigures/allpics.txt`と`DBfigures/graph.txt`にはlatex式を書くことができる。
-- latex式とは`$`で囲まれた文字列である。スペースやタブ文字を含めることができる。
+- latex式とは`$`で囲まれた文字列である。スペースやタブ文字を含めることができるが、改行を含めることはできない。
 - 一つの画像、ルールを表現する式として、複数のlatex式を含めることはできない。
 
 ## DBfigures/allpics.txt
