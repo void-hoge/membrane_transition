@@ -37,9 +37,9 @@ class transition:
 		"""
 		all = open(DBallpics).read().split('\n')
 		for line in all[:-1]:
-			tmp = line.split();
-			fig = tmp[0];
-			fml = tmp[1];
+			tmp = line.split('$');
+			fml = '$'+tmp[1]+'$'
+			fig = tmp[0].split()[0];
 			print("Loading {}, {}, {}".format(fig+'.png', fig+'_fml.png', fml), file=sys.stderr)
 			if 'rule_' in fig:
 				# a rule

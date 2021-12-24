@@ -20,10 +20,10 @@ def render(dbdir, file):
 				continue
 		except Exception as e:
 			pass
-		print("Rendering {}".format(data[i]))
-		tmp = data[i].split()
-		name = tmp[0]
-		formula = tmp[1]
+		tmp = data[i].split('$')
+		name = tmp[0].split()[0]
+		formula = '$'+tmp[1]+'$'
+		print("Rendering {} {}".format(name, formula))
 		plt.grid(False)
 		fig, ax = plt.subplots(figsize=(60,3), dpi=50)
 		ax.axis("off")

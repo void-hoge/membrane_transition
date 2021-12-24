@@ -8,13 +8,14 @@
   - レンダリング、グラフの構成、GUIでの表示を全て行える。
 
 ## 画像の用意
+- 使用する画像は、全て`DBfigures/`直下に置く必要がある。
+- 拡張子は`.png`のみをサポートしている。
+- 画像のファイル名はスペース、`$`を含んではならない。
 
-使用する画像は、全て`DBfigures/`直下に置く必要がある。
-
-拡張子は`.png`のみをサポートしている。
-
-## 式の制約
-`DBfigures/allpics.txt`と`DBfigures/graph.txt`に記入するlatexの式は全て、スペースやタブ文字を含むことができない。
+## latex式の制約
+- `DBfigures/allpics.txt`と`DBfigures/graph.txt`にはlatex式を書くことができる。
+- latex式とは`$`で囲まれた文字列である。スペースやタブ文字を含めることができる。
+- 一つの画像、ルールを表現する式として、複数のlatex式を含めることはできない。
 
 ## DBfigures/allpics.txt
 画像を一括で読み込むためのテーブル。行ごとの順序は問わない。
@@ -24,10 +25,10 @@
   - 読み込みたい画像と、その状態を表す式を表現する。
   - 画像のbasenameとは、拡張子を除いた名前のこと
     - 例えば、`figX.png`が、`$hogepoyo$`の時、その行は`figX $hogepoyo$`となる。
-    - この時、`DBfigures/figX.png`がmain.pyで読み込まれ、render.pyで`DBfigures/figX_fml.png`が生成される。
+    - この時、render.pyで`DBfigures/figX_fml.png`が生成され、main.pyで`DBfigures/figX.png`と`DBfigures/figX_fml.png`が読み込まれる。
 - `rule_変換規則名 latex式`
   - 変換規則と、その状態を表す式を表現する。
-  - 変換規則名はファイルとして保存するためだけのもので、先頭が`rule_`となっていて、重複がないならなんでも良い。(main.pyでは、式そのものをキーとした辞書を使うため)
+  - 変換規則名はファイルとして保存するためだけのもので、先頭が`rule_`となっていて、重複がないならなんでも良い。(main.pyでは、式の文字列そのものをキーとした辞書を使うため)
     - 例えば、`$(TU)$`というルールの式を生成するとき、`rule_TU $(TU)$`とする。(`rule_TU`のところは`rule_*`の形を満たせばなんでも良い。)
     - この時、`DBfigures/rule_TU_fml.png`が生成される。
 
@@ -53,7 +54,7 @@
 ```
 
 - `rule`
-  - 使用するルールの式(画像の名前ではない)
+  - 使用するルールのlatex式(画像の名前ではない)
 - 例
   - `fig1.png`から`fig2.png`への辺で、ハイライトされた画像が`fig1_fig2.png`、座標が(0.5, 0.2)、ルールが`$(Cm^{+})$`の時
   - `fig1 fig2 fig1_fig2 0.5 0.2 $(Cm^{+})$`

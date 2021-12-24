@@ -24,10 +24,12 @@ class graph:
 		all = open(filepath).read().split('\n')
 		self.root = all[0].split()[0]
 		for line in all[:-1]:
-			tmp = line.split()
+			tmp = line.split('$')
+			rule = '$'+tmp[1]+'$'
+			tmp = tmp[0].split()
 			if tmp[0] not in self.edge:
 				self.edge[tmp[0]] = []
-			self.edge[tmp[0]].append(edge(tmp[1], tmp[2], float(tmp[3]), float(tmp[4]), tmp[5]))
+			self.edge[tmp[0]].append(edge(tmp[1], tmp[2], float(tmp[3]), float(tmp[4]), rule))
 			self.node.add(tmp[0])
 			self.node.add(tmp[1])
 		self.path.append(self.root)
