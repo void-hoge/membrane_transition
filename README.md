@@ -1,7 +1,24 @@
 # MEMBRANE TRANSITION
 
+- 細胞膜の形状遷移のvisualizer
+
 ![screenshot](screenshot/ss1.png)
 
+
+---
+## Authers
+- ソースコード、DBテキスト: M.Noda (GitHub: void-hoge)
+- DB画像: K.Takahashi
+
+## References
+- Tosue,M. and K.Takahashi: "Towards a Qualitative Reasoning on Shape Change and Object Division," 14th International Conference on Spatial Information Theory (COSIT 2019), pp.7:1-7:15, LIPICS Vol. 142, ISBN 978-3-95977-115-3, September, 2019.
+
+- 東末桃：「形状変化に関する定性的な記述方式と推論およびその性質について」関西学院大学大学院理工学研究科修士論文.
+
+## License
+- GPLv3
+
+---
 ## 実行
 - Python3, pygame, Pillow, matplotlibを使用。
 - `$ ./main.py`で実行
