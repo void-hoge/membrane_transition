@@ -6,7 +6,7 @@
 
 
 ---
-## Authers
+## Authors
 - ソースコード、DBテキスト: M.Noda (GitHub: void-hoge)
 - DB画像: K.Takahashi
 
